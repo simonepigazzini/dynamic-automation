@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  grafana:
+    image: grafana/grafana-oss
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER__FILE=/run/secrets/admin_user
+      - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/admin_password
+    secrets:
+      - admin_user
+      - admin_password
+  influxdb:
+    image: influxdb:1.8
+    ports:
+      - '8093:8093'
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+      - ./config/influxdb.conf:/etc/influxdb/influxdb.conf
+    environment:
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=changeme
+  jenkins:
+    image: jenkins-docker
+    build:
+      context: ./images/jenkins
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+
+secrets:
+  admin_user:
+    external: true
+  admin_password:
+    external: true
+
+volumes:
+  grafana_data:
+  influxdb_data:
+  jenkins_home:
+  # grafana_data:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     device: /home/pigo/grafana
+  #     o: bind
+  # influxdb_data:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     device: /home/pigo/influxdb
+  #     o: bind      
