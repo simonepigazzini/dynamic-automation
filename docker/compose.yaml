@@ -44,15 +44,3 @@ volumes:
   grafana_data:
   influxdb_data:
   jenkins_home:
-  # grafana_data:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     device: /home/pigo/grafana
-  #     o: bind
-  # influxdb_data:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     device: /home/pigo/influxdb
-  #     o: bind      
